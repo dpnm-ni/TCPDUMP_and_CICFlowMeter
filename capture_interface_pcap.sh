@@ -13,7 +13,7 @@ cleanup() {
 	echo "=== Capturer is being cancled ==="
     echo "=== Wait the converter finished for 3 seconds..."
 	sleep 3
-	echo 
+	echo
 	echo "=== Convert left PCAP files if any"
 	OIFS="$IFS"
 	IFS=$'\n'
@@ -26,14 +26,14 @@ cleanup() {
     echo "=== Clean stuff up"
     rm -f "$output_dir"/*.pcap
 
-	echo 
+	echo
     exit 0
 }
 
 trap 'cleanup' INT TERM EXIT
 
 #output_file=${output_dir}/$(date +'%Y-%m-%d-%H:%M:%S.pcap')
-output_file_format=${output_dir}/'%Y-%m-%d-%H:%M:%S.pcap'
+output_file_format=${output_dir}/"${HOSTNAME}--%Y-%m-%d--%H-%M-%S.pcap"
 options="-n -nn -N -s 0"
 
 [[ ! -z "${user}" ]] && options="${options} -Z ${user}"  #$(id -nu 1000)
