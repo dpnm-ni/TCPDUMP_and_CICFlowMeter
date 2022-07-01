@@ -1,13 +1,19 @@
 #!/bin/bash
-
+set -x
 pcap_file="$1"
+
 [[ ! -f "${pcap_file}" ]] && echo "PCAP file ${pcap_file} does NOT exist!" && exit 255
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"  # On the same directory.
 echo ">>> Script dir: ${script_dir}"
 
 output_dir="${script_dir}"/csv
+pcap_file_name=$(basename "$pcap_file")
+# cicflowmeter add _ISCX to the exported filename
+csv_file=${pcap_file_name/.pcap/_ISCX.csv}
 
+# This script is run via tcpdump, where there is no easy way to pass other optional arguments
+STORAGE_URL=http://141.223.181.149:8402/cicflowmeter
 
 ## Clean
 cancel() {
@@ -40,6 +46,10 @@ cic="${script_dir}"/CICFlowMeters/CICFlowMeter-3.0/bin/CICFlowMeter
 
 "${cic}" "${pcap_file}" "${output_dir}"
 
+
+[[ ! -z "${STORAGE_URL}" ]] && \
+	curl -T ${output_dir}/${csv_file} ${STORAGE_URL}/${csv_file} && \
+	rm ${output_dir}/${csv_file}
 
 echo "+++ Remove ${pcap_file}"
 rm -f "${pcap_file}"
