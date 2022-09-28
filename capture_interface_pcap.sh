@@ -4,7 +4,7 @@ interface=$1
 storage_url=$2
 
 output_dir=pcap
-rotate_interval=10
+rotate_interval=60
 
 [[ "$(grep -c "$interface" /proc/net/dev)" == "0" ]] && echo "The interface is NOT found!" && exit 255
 [[ ! -d "$output_dir" ]] && echo "The output directory does NOT exist!" && exit 255
